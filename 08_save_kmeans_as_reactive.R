@@ -21,10 +21,15 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
-
+  
+  clusters <- reactive({
+    kmeans(iris[,c(input$xcol,input$ycol)], input$clusters)
+  })
+  
   output$plot1 <- renderPlot({
     plot(iris[,c(input$xcol,input$ycol)],
-         col = kmeans(iris[,c(input$xcol,input$ycol)], input$clusters)$cluster)
+         col = clusters()$cluster)
+    points(clusters()$centers, pch = 4, cex = 4, lwd = 4)
   })
 }
 
